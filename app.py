@@ -1,13 +1,12 @@
 from flask import Flask, jsonify, request
-
+import json
 app = Flask(__name__)
 
 # Route to return an array from a JSON
-@app.route('/api/array', methods=['GET'])
+@app.route('/api/locations', methods=['GET'])
 def get_array():
-    data = {
-        "array": ["value1", "value2", "value3"]
-    }
+    with open('locations.json', 'r') as file:
+        data = json.load(file)
     return jsonify(data)
 
 # Route for login
