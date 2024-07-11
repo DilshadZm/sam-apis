@@ -1,190 +1,22 @@
-from flask import Flask, jsonify, request, send_file
-import sqlite3
-import os
-import base64
-import requests
-from github import Github
-import tempfile
-import subprocess
-
+from flask import Flask, jsonify, request
+import json
 app = Flask(__name__)
 
-# Function to download SQLite database file from GitHub
-def download_database():
-    db_url = 'https://raw.githubusercontent.com/DilshadZm/sam-apis/main/zertify.db'
-    db_filename = 'zertify.db'
-    
-    try:
-        print(f"Attempting to download database from {db_url}")
-        response = requests.get(db_url)
-        if response.status_code == 200:
-            with open(db_filename, 'wb') as f:
-                f.write(response.content)
-            print(f"Database file downloaded successfully. Size: {len(response.content)} bytes")
-            
-            # Verify the downloaded file
-            try:
-                conn = sqlite3.connect(db_filename)
-                c = conn.cursor()
-                c.execute("SELECT name FROM sqlite_master WHERE type='table'")
-                tables = c.fetchall()
-                print(f"Tables in the downloaded database: {tables}")
-                conn.close()
-                return True
-            except sqlite3.DatabaseError as e:
-                print(f"Downloaded file is not a valid SQLite database: {e}")
-                os.remove(db_filename)
-                return False
-        else:
-            print(f"Failed to download database. Status code: {response.status_code}")
-            return False
-    except Exception as e:
-        print(f"Error downloading database file: {str(e)}")
-        return False
-
-# Database setup
-def init_db():
-    db_filename = 'zertify.db'
-    
-    # Check if zertify.db file exists; if not, download it
-    if not os.path.isfile(db_filename):
-        print(f"Database file {db_filename} not found. Attempting to download...")
-        if not download_database():
-            print("Failed to download database file. Exiting.")
-            exit(1)
-    else:
-        print(f"Database file {db_filename} found.")
-    
-    try:
-        conn = sqlite3.connect(db_filename)
-        c = conn.cursor()
-        c.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='locations'")
-        if c.fetchone():
-            print("Locations table already exists.")
-        else:
-            print("Creating locations table...")
-            c.execute('''CREATE TABLE IF NOT EXISTS locations
-                         (locationId INTEGER PRIMARY KEY,
-                          name TEXT,
-                          address TEXT,
-                          city TEXT,
-                          state TEXT,
-                          zipcode TEXT)''')
-            conn.commit()
-            print("Locations table created successfully.")
-        conn.close()
-    except sqlite3.DatabaseError as e:
-        print(f"SQLite error: {e}")
-        print("Attempting to delete and re-download the database file...")
-        os.remove(db_filename)
-        if download_database():
-            print("Database re-downloaded successfully. Retrying initialization...")
-            init_db()  # Recursive call to retry initialization
-        else:
-            print("Failed to re-download database. Exiting.")
-            exit(1)
-    except Exception as e:
-        print(f"Unexpected error during database initialization: {e}")
-        exit(1)
-        
-# Initialize the database
-init_db()
-
-def update_github_file(file_path, content, commit_message):
-    # Initialize Github instance with your Personal Access Token
-    g = Github(os.environ.get('GITHUB_TOKEN'))
-    
-    # Get the repository
-    repo = g.get_repo('DilshadZm/sam-apis')
-    
-    # Get the current file content
-    file = repo.get_contents(file_path)
-    
-    # Update the file
-    repo.update_file(
-        file_path,
-        commit_message,
-        base64.b64encode(content).decode('utf-8'),
-        file.sha
-    )
-
-# Function to commit and push changes to GitHub
-def commit_and_push_changes(commit_message):
-    try:
-        # Add all changes to staging area
-        subprocess.run(['git', 'add', '.'])
-
-        # Commit changes with a message
-        subprocess.run(['git', 'commit', '-m', commit_message])
-
-        # Push changes to remote repository (GitHub)
-        subprocess.run(['git', 'push', 'origin', 'main'])
-        
-        return True
-    except Exception as e:
-        print(f"Error committing and pushing changes: {str(e)}")
-        return False
-
-# Helper function to convert row to dictionary
-def row_to_dict(row):
-    return {
-        "locationId": row[0],
-        "name": row[1],
-        "address": row[2],
-        "city": row[3],
-        "state": row[4],
-        "zipcode": row[5]
-    }
-
-# Route to return all locations
+# Route to return an array from a JSON
 @app.route('/api/locations', methods=['GET'])
-def get_locations():
-    conn = sqlite3.connect('zertify.db')
-    c = conn.cursor()
-    c.execute("SELECT * FROM locations")
-    locations = [row_to_dict(row) for row in c.fetchall()]
-    conn.close()
-    return jsonify(locations)
+def get_array():
+    with open('locations.json', 'r') as file:
+        data = json.load(file)
+    return jsonify(data)
 
-# Route to add a new location
-@app.route('/api/locations', methods=['POST'])
-def add_location():
-    location_data = request.get_json()
-    
-    if not location_data:
-        return jsonify({"message": "Invalid input"}), 400
-    
-    conn = sqlite3.connect('zertify.db')
-    c = conn.cursor()
-    
-    # Check if locationId already exists
-    c.execute("SELECT * FROM locations WHERE locationId = ?", (location_data['locationId'],))
-    if c.fetchone():
-        conn.close()
-        return jsonify({"message": "Location with this ID already exists"}), 409
-    
-    # Insert new location
-    c.execute('''INSERT INTO locations (locationId, name, address, city, state, zipcode)
-                 VALUES (?, ?, ?, ?, ?, ?)''',
-              (location_data['locationId'], location_data['name'], location_data['address'],
-               location_data['city'], location_data['state'], location_data['zipcode']))
-    conn.commit()
-    with open('zertify.db', 'rb') as file:
-        db_content = file.read()
-    conn.close()
-    
-    try:
-        update_github_file('zertify.db', db_content, f"Added location ID {location_data['locationId']}")
-        return jsonify({"message": "Location added successfully"}), 201
-    except Exception as e:
-        return jsonify({"message": f"Failed to update GitHub: {str(e)}"}), 500
-
-# Route for login (unchanged)
+# Route for login
 @app.route('/api/login', methods=['POST'])
 def login():
+    # Predefined username and password
     predefined_username = "admin"
     predefined_password = "password"
 
+    # Get the JSON data from the request
     auth_data = request.get_json()
 
     if auth_data is None:
@@ -197,84 +29,6 @@ def login():
         return jsonify({"message": "Login successful"}), 200
     else:
         return jsonify({"message": "Invalid credentials"}), 401
-
-# New route for bulk import from SQLite file
-@app.route('/api/bulk-import', methods=['POST'])
-def bulk_import():
-    if 'file' not in request.files:
-        return jsonify({"message": "No file part"}), 400
-    
-    file = request.files['file']
-    
-    if file.filename == '':
-        return jsonify({"message": "No selected file"}), 400
-    
-    if not file.filename.endswith('.db'):
-        return jsonify({"message": "Invalid file type. Please upload a SQLite database file"}), 400
-
-    # Save the uploaded file temporarily
-    temp_dir = tempfile.mkdtemp()
-    temp_path = os.path.join(temp_dir, 'temp.db')
-    file.save(temp_path)
-
-    try:
-        # Connect to the uploaded database
-        temp_conn = sqlite3.connect(temp_path)
-        temp_cursor = temp_conn.cursor()
-
-        # Check if the 'locations' table exists in the uploaded database
-        temp_cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='locations'")
-        if not temp_cursor.fetchone():
-            return jsonify({"message": "The uploaded database does not contain a 'locations' table"}), 400
-
-        # Fetch all locations from the uploaded database
-        temp_cursor.execute("SELECT * FROM locations")
-        new_locations = temp_cursor.fetchall()
-
-        # Connect to the main database
-        main_conn = sqlite3.connect('zertify.db')
-        main_cursor = main_conn.cursor()
-
-        # Begin transaction
-        main_conn.execute('BEGIN TRANSACTION')
-
-        try:
-            for location in new_locations:
-                # Check if the location already exists
-                main_cursor.execute("SELECT * FROM locations WHERE locationId = ?", (location[0],))
-                if main_cursor.fetchone():
-                    # Update existing location
-                    main_cursor.execute('''UPDATE locations 
-                                           SET name = ?, address = ?, city = ?, state = ?, zipcode = ?
-                                           WHERE locationId = ?''', 
-                                        (location[1], location[2], location[3], location[4], location[5], location[0]))
-                else:
-                    # Insert new location
-                    main_cursor.execute('''INSERT INTO locations 
-                                           (locationId, name, address, city, state, zipcode)
-                                           VALUES (?, ?, ?, ?, ?, ?)''', location)
-
-            # Commit the transaction
-            main_conn.commit()
-            
-            return jsonify({"message": f"Successfully imported {len(new_locations)} locations"}), 200
-
-        except Exception as e:
-            # If any error occurs, rollback the transaction
-            main_conn.rollback()
-            return jsonify({"message": f"An error occurred during import: {str(e)}"}), 500
-
-        finally:
-            main_conn.close()
-
-    except Exception as e:
-        return jsonify({"message": f"An error occurred while processing the file: {str(e)}"}), 500
-
-    finally:
-        temp_conn.close()
-        os.remove(temp_path)
-        os.rmdir(temp_dir)
-
 
 if __name__ == '__main__':
     app.run(debug=True)
