@@ -51,7 +51,7 @@ def init_db():
         print("Database not found in Azure Blob Storage. Creating a new one.")
         conn = sqlite3.connect(':memory:')
         c = conn.cursor()
-        c.execute('''CREATE TABLE IF NOT EXISTS locations
+        c.execute('''CREATE TABLE IF NOT EXISTS Location
                      (locationId INTEGER PRIMARY KEY,
                       name TEXT,
                       address TEXT,
@@ -98,7 +98,7 @@ def row_to_dict(row):
 def get_locations():
     conn, temp_db_name = get_db_connection()
     c = conn.cursor()
-    c.execute("SELECT * FROM locations")
+    c.execute("SELECT * FROM Location")
     locations = [row_to_dict(row) for row in c.fetchall()]
     conn.close()
     os.unlink(temp_db_name)
@@ -115,13 +115,13 @@ def add_location():
     c = conn.cursor()
     
     try:
-        c.execute("SELECT * FROM locations WHERE locationId = ?", (location_data['locationId'],))
+        c.execute("SELECT * FROM Location WHERE locationId = ?", (location_data['locationId'],))
         if c.fetchone():
             conn.close()
             os.unlink(temp_db_name)
             return jsonify({"message": "Location with this ID already exists"}), 409
         
-        c.execute('''INSERT INTO locations (locationId, name, address, city, state, zipcode)
+        c.execute('''INSERT INTO Location (locationId, name, address, city, state, zipcode)
                      VALUES (?, ?, ?, ?, ?, ?)''',
                   (location_data['locationId'], location_data['name'], location_data['address'],
                    location_data['city'], location_data['state'], location_data['zipcode']))
@@ -185,13 +185,13 @@ def bulk_import():
         temp_conn = sqlite3.connect(temp_path)
         temp_cursor = temp_conn.cursor()
 
-        # Check if the 'locations' table exists in the uploaded database
-        temp_cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='locations'")
+        # Check if the 'Location' table exists in the uploaded database
+        temp_cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='Location'")
         if not temp_cursor.fetchone():
-            return jsonify({"message": "The uploaded database does not contain a 'locations' table"}), 400
+            return jsonify({"message": "The uploaded database does not contain a 'Location' table"}), 400
 
-        # Fetch all locations from the uploaded database
-        temp_cursor.execute("SELECT * FROM locations")
+        # Fetch all Location from the uploaded database
+        temp_cursor.execute("SELECT * FROM Location")
         new_locations = temp_cursor.fetchall()
 
         # Download the current database from Azure Blob Storage
@@ -214,16 +214,16 @@ def bulk_import():
         try:
             for location in new_locations:
                 # Check if the location already exists
-                main_cursor.execute("SELECT * FROM locations WHERE locationId = ?", (location[0],))
+                main_cursor.execute("SELECT * FROM Location WHERE locationId = ?", (location[0],))
                 if main_cursor.fetchone():
                     # Update existing location
-                    main_cursor.execute('''UPDATE locations 
+                    main_cursor.execute('''UPDATE Location 
                                            SET name = ?, address = ?, city = ?, state = ?, zipcode = ?
                                            WHERE locationId = ?''', 
                                         (location[1], location[2], location[3], location[4], location[5], location[0]))
                 else:
                     # Insert new location
-                    main_cursor.execute('''INSERT INTO locations 
+                    main_cursor.execute('''INSERT INTO Location 
                                            (locationId, name, address, city, state, zipcode)
                                            VALUES (?, ?, ?, ?, ?, ?)''', location)
 
