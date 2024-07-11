@@ -1,12 +1,37 @@
 from flask import Flask, jsonify, request, send_file
 import sqlite3
 import os
+import requests
 import tempfile
+import subprocess
 
 app = Flask(__name__)
 
+# Function to download SQLite database file from GitHub
+def download_database():
+    db_url = 'https://raw.githubusercontent.com/DilshadZm/sam-apis/main/zertify.db'  # Replace with your GitHub URL
+    db_filename = 'zertify.db'
+    
+    try:
+        response = requests.get(db_url)
+        if response.status_code == 200:
+            with open(db_filename, 'wb') as f:
+                f.write(response.content)
+            return True
+        else:
+            return False
+    except Exception as e:
+        print(f"Error downloading database file: {str(e)}")
+        return False
+
 # Database setup
 def init_db():
+    # Check if zertify.db file exists; if not, download it
+    if not os.path.isfile('zertify.db'):
+        if not download_database():
+            print("Failed to download database file. Exiting.")
+            exit(1)
+    
     conn = sqlite3.connect('zertify.db')
     c = conn.cursor()
     c.execute('''CREATE TABLE IF NOT EXISTS locations
@@ -19,7 +44,25 @@ def init_db():
     conn.commit()
     conn.close()
 
+# Initialize the database
 init_db()
+
+# Function to commit and push changes to GitHub
+def commit_and_push_changes(commit_message):
+    try:
+        # Add all changes to staging area
+        subprocess.run(['git', 'add', '.'])
+
+        # Commit changes with a message
+        subprocess.run(['git', 'commit', '-m', commit_message])
+
+        # Push changes to remote repository (GitHub)
+        subprocess.run(['git', 'push', 'origin', 'main'])
+        
+        return True
+    except Exception as e:
+        print(f"Error committing and pushing changes: {str(e)}")
+        return False
 
 # Helper function to convert row to dictionary
 def row_to_dict(row):
@@ -67,7 +110,11 @@ def add_location():
     conn.commit()
     conn.close()
     
-    return jsonify({"message": "Location added successfully"}), 201
+    # Call function to commit and push changes to GitHub
+    if commit_and_push_changes(f"Added location ID {location_data['locationId']}"):
+        return jsonify({"message": "Location added successfully"}), 201
+    else:
+        return jsonify({"message": "Failed to commit and push changes to GitHub"}), 500
 
 # Route for login (unchanged)
 @app.route('/api/login', methods=['POST'])
