@@ -11,16 +11,32 @@ app = Flask(__name__)
 
 # Function to download SQLite database file from GitHub
 def download_database():
-    db_url = 'https://raw.githubusercontent.com/DilshadZm/sam-apis/main/zertify.db'  # Replace with your GitHub URL
+    db_url = 'https://raw.githubusercontent.com/DilshadZm/sam-apis/main/zertify.db'
     db_filename = 'zertify.db'
     
     try:
+        print(f"Attempting to download database from {db_url}")
         response = requests.get(db_url)
         if response.status_code == 200:
             with open(db_filename, 'wb') as f:
                 f.write(response.content)
-            return True
+            print(f"Database file downloaded successfully. Size: {len(response.content)} bytes")
+            
+            # Verify the downloaded file
+            try:
+                conn = sqlite3.connect(db_filename)
+                c = conn.cursor()
+                c.execute("SELECT name FROM sqlite_master WHERE type='table'")
+                tables = c.fetchall()
+                print(f"Tables in the downloaded database: {tables}")
+                conn.close()
+                return True
+            except sqlite3.DatabaseError as e:
+                print(f"Downloaded file is not a valid SQLite database: {e}")
+                os.remove(db_filename)
+                return False
         else:
+            print(f"Failed to download database. Status code: {response.status_code}")
             return False
     except Exception as e:
         print(f"Error downloading database file: {str(e)}")
@@ -28,24 +44,49 @@ def download_database():
 
 # Database setup
 def init_db():
+    db_filename = 'zertify.db'
+    
     # Check if zertify.db file exists; if not, download it
-    if not os.path.isfile('zertify.db'):
+    if not os.path.isfile(db_filename):
+        print(f"Database file {db_filename} not found. Attempting to download...")
         if not download_database():
             print("Failed to download database file. Exiting.")
             exit(1)
+    else:
+        print(f"Database file {db_filename} found.")
     
-    conn = sqlite3.connect('zertify.db')
-    c = conn.cursor()
-    c.execute('''CREATE TABLE IF NOT EXISTS locations
-                 (locationId INTEGER PRIMARY KEY,
-                  name TEXT,
-                  address TEXT,
-                  city TEXT,
-                  state TEXT,
-                  zipcode TEXT)''')
-    conn.commit()
-    conn.close()
-
+    try:
+        conn = sqlite3.connect(db_filename)
+        c = conn.cursor()
+        c.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='locations'")
+        if c.fetchone():
+            print("Locations table already exists.")
+        else:
+            print("Creating locations table...")
+            c.execute('''CREATE TABLE IF NOT EXISTS locations
+                         (locationId INTEGER PRIMARY KEY,
+                          name TEXT,
+                          address TEXT,
+                          city TEXT,
+                          state TEXT,
+                          zipcode TEXT)''')
+            conn.commit()
+            print("Locations table created successfully.")
+        conn.close()
+    except sqlite3.DatabaseError as e:
+        print(f"SQLite error: {e}")
+        print("Attempting to delete and re-download the database file...")
+        os.remove(db_filename)
+        if download_database():
+            print("Database re-downloaded successfully. Retrying initialization...")
+            init_db()  # Recursive call to retry initialization
+        else:
+            print("Failed to re-download database. Exiting.")
+            exit(1)
+    except Exception as e:
+        print(f"Unexpected error during database initialization: {e}")
+        exit(1)
+        
 # Initialize the database
 init_db()
 
