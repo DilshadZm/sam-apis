@@ -1,7 +1,9 @@
 from flask import Flask, jsonify, request, send_file
 import sqlite3
 import os
+import base64
 import requests
+from github import Github
 import tempfile
 import subprocess
 
@@ -46,6 +48,24 @@ def init_db():
 
 # Initialize the database
 init_db()
+
+def update_github_file(file_path, content, commit_message):
+    # Initialize Github instance with your Personal Access Token
+    g = Github(os.environ.get('GITHUB_TOKEN'))
+    
+    # Get the repository
+    repo = g.get_repo('DilshadZm/sam-apis')
+    
+    # Get the current file content
+    file = repo.get_contents(file_path)
+    
+    # Update the file
+    repo.update_file(
+        file_path,
+        commit_message,
+        base64.b64encode(content).decode('utf-8'),
+        file.sha
+    )
 
 # Function to commit and push changes to GitHub
 def commit_and_push_changes(commit_message):
@@ -108,13 +128,15 @@ def add_location():
               (location_data['locationId'], location_data['name'], location_data['address'],
                location_data['city'], location_data['state'], location_data['zipcode']))
     conn.commit()
+    with open('zertify.db', 'rb') as file:
+        db_content = file.read()
     conn.close()
     
-    # Call function to commit and push changes to GitHub
-    if commit_and_push_changes(f"Added location ID {location_data['locationId']}"):
+    try:
+        update_github_file('zertify.db', db_content, f"Added location ID {location_data['locationId']}")
         return jsonify({"message": "Location added successfully"}), 201
-    else:
-        return jsonify({"message": "Failed to commit and push changes to GitHub"}), 500
+    except Exception as e:
+        return jsonify({"message": f"Failed to update GitHub: {str(e)}"}), 500
 
 # Route for login (unchanged)
 @app.route('/api/login', methods=['POST'])
