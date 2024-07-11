@@ -1,0 +1,36 @@
+name: Update Database
+
+on:
+  push:
+    branches:
+      - main  # Update for your main branch
+
+jobs:
+  update-database:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.10.7'  # Replace with your Python version
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt  # Replace with your requirements file
+
+      - name: Download SQLite database
+        run: |
+          curl -o zertify.db https://raw.githubusercontent.com/DilshadZm/sam-apis/main/zertify.db
+          
+      - name: Commit database changes
+        run: |
+          git config --local user.email "dilludilshad123@gmail.com.com"
+          git config --local user.name "Dilshad ZM"
+          git add zertify.db
+          git commit -m "Update SQLite database"
+          git push origin main
