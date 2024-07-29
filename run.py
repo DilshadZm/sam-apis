@@ -36,7 +36,7 @@ def get_sites():
     return jsonify(sites)
 
 @app.route('/api/owners', methods=['GET'])
-def get_sites():
+def get_owners():
     owners = load_json('Owner.json')
     return jsonify(owners)
 
