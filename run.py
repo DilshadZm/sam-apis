@@ -42,3 +42,21 @@ def get_locations():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+@app.route('/api/login', methods=['POST'])
+def login():
+    predefined_username = "admin"
+    predefined_password = "password"
+
+    auth_data = request.get_json()
+
+    if auth_data is None:
+        return jsonify({"message": "Invalid input"}), 400
+
+    username = auth_data.get('username')
+    password = auth_data.get('password')
+
+    if username == predefined_username and password == predefined_password:
+        return jsonify({"message": "Login successful"}), 200
+    else:
+        return jsonify({"message": "Invalid credentials"}), 401
