@@ -1,0 +1,202 @@
+[
+    {
+        "manufacturerId": 1,
+        "manufacturerName": "Manufacturer X",
+        "addressLine": "1234 Elm Street",
+        "status": true,
+        "createdBy": 1,
+        "createdOn": "2024-07-29T10:00:00",
+        "modifiedBy": null,
+        "modifiedOn": null
+    },
+    {
+        "manufacturerId": 2,
+        "manufacturerName": "Manufacturer Y",
+        "addressLine": "5678 Oak Avenue",
+        "status": true,
+        "createdBy": 2,
+        "createdOn": "2024-07-28T15:00:00",
+        "modifiedBy": 3,
+        "modifiedOn": "2024-07-29T12:00:00"
+    },
+    {
+        "manufacturerId": 3,
+        "manufacturerName": "Manufacturer Z",
+        "addressLine": "910 Pine Road",
+        "status": false,
+        "createdBy": 1,
+        "createdOn": "2024-07-28T16:00:00",
+        "modifiedBy": 2,
+        "modifiedOn": "2024-07-29T13:00:00"
+    },
+    {
+        "manufacturerId": 4,
+        "manufacturerName": "Manufacturer W",
+        "addressLine": "112 Maple Lane",
+        "status": true,
+        "createdBy": 2,
+        "createdOn": "2024-07-28T17:00:00",
+        "modifiedBy": 4,
+        "modifiedOn": "2024-07-29T14:00:00"
+    },
+    {
+        "manufacturerId": 5,
+        "manufacturerName": "Manufacturer V",
+        "addressLine": "113 Cedar Court",
+        "status": false,
+        "createdBy": 3,
+        "createdOn": "2024-07-28T18:00:00",
+        "modifiedBy": 5,
+        "modifiedOn": "2024-07-29T15:00:00"
+    },
+    {
+        "manufacturerId": 6,
+        "manufacturerName": "Manufacturer U",
+        "addressLine": "114 Birch Boulevard",
+        "status": true,
+        "createdBy": 1,
+        "createdOn": "2024-07-28T19:00:00",
+        "modifiedBy": null,
+        "modifiedOn": null
+    },
+    {
+        "manufacturerId": 7,
+        "manufacturerName": "Manufacturer T",
+        "addressLine": "115 Willow Way",
+        "status": true,
+        "createdBy": 2,
+        "createdOn": "2024-07-28T20:00:00",
+        "modifiedBy": 6,
+        "modifiedOn": "2024-07-29T16:00:00"
+    },
+    {
+        "manufacturerId": 8,
+        "manufacturerName": "Manufacturer S",
+        "addressLine": "116 Aspen Avenue",
+        "status": false,
+        "createdBy": 3,
+        "createdOn": "2024-07-28T21:00:00",
+        "modifiedBy": 7,
+        "modifiedOn": "2024-07-29T17:00:00"
+    },
+    {
+        "manufacturerId": 9,
+        "manufacturerName": "Manufacturer R",
+        "addressLine": "117 Spruce Street",
+        "status": true,
+        "createdBy": 1,
+        "createdOn": "2024-07-28T22:00:00",
+        "modifiedBy": 8,
+        "modifiedOn": "2024-07-29T18:00:00"
+    },
+    {
+        "manufacturerId": 10,
+        "manufacturerName": "Manufacturer Q",
+        "addressLine": "118 Redwood Road",
+        "status": true,
+        "createdBy": 2,
+        "createdOn": "2024-07-28T23:00:00",
+        "modifiedBy": null,
+        "modifiedOn": null
+    },
+    {
+        "manufacturerId": 11,
+        "manufacturerName": "Manufacturer P",
+        "addressLine": "119 Palm Place",
+        "status": false,
+        "createdBy": 3,
+        "createdOn": "2024-07-29T00:00:00",
+        "modifiedBy": 9,
+        "modifiedOn": "2024-07-29T19:00:00"
+    },
+    {
+        "manufacturerId": 12,
+        "manufacturerName": "Manufacturer O",
+        "addressLine": "120 Magnolia Mall",
+        "status": true,
+        "createdBy": 1,
+        "createdOn": "2024-07-29T01:00:00",
+        "modifiedBy": 10,
+        "modifiedOn": "2024-07-29T20:00:00"
+    },
+    {
+        "manufacturerId": 13,
+        "manufacturerName": "Manufacturer N",
+        "addressLine": "121 Cypress Circle",
+        "status": true,
+        "createdBy": 2,
+        "createdOn": "2024-07-29T02:00:00",
+        "modifiedBy": null,
+        "modifiedOn": null
+    },
+    {
+        "manufacturerId": 14,
+        "manufacturerName": "Manufacturer M",
+        "addressLine": "122 Poplar Plaza",
+        "status": true,
+        "createdBy": 3,
+        "createdOn": "2024-07-29T03:00:00",
+        "modifiedBy": 11,
+        "modifiedOn": "2024-07-29T21:00:00"
+    },
+    {
+        "manufacturerId": 15,
+        "manufacturerName": "Manufacturer L",
+        "addressLine": "123 Fir Freeway",
+        "status": true,
+        "createdBy": 1,
+        "createdOn": "2024-07-29T04:00:00",
+        "modifiedBy": 12,
+        "modifiedOn": "2024-07-29T22:00:00"
+    },
+    {
+        "manufacturerId": 16,
+        "manufacturerName": "Manufacturer K",
+        "addressLine": "124 Pine Parkway",
+        "status": true,
+        "createdBy": 2,
+        "createdOn": "2024-07-29T05:00:00",
+        "modifiedBy": 13,
+        "modifiedOn": "2024-07-29T23:00:00"
+    },
+    {
+        "manufacturerId": 17,
+        "manufacturerName": "Manufacturer J",
+        "addressLine": "125 Cherry Circle",
+        "status": false,
+        "createdBy": 3,
+        "createdOn": "2024-07-29T06:00:00",
+        "modifiedBy": 14,
+        "modifiedOn": "2024-07-30T00:00:00"
+    },
+    {
+        "manufacturerId": 18,
+        "manufacturerName": "Manufacturer I",
+        "addressLine": "126 Maple Drive",
+        "status": true,
+        "createdBy": 1,
+        "createdOn": "2024-07-29T07:00:00",
+        "modifiedBy": null,
+        "modifiedOn": null
+    },
+    {
+        "manufacturerId": 19,
+        "manufacturerName": "Manufacturer H",
+        "addressLine": "127 Oak Overpass",
+        "status": true,
+        "createdBy": 2,
+        "createdOn": "2024-07-29T08:00:00",
+        "modifiedBy": 15,
+        "modifiedOn": "2024-07-30T01:00:00"
+    },
+    {
+        "manufacturerId": 20,
+        "manufacturerName": "Manufacturer G",
+        "addressLine": "128 Willow Way",
+        "status": false,
+        "createdBy": 3,
+        "createdOn": "2024-07-29T09:00:00",
+        "modifiedBy": 16,
+        "modifiedOn": "2024-07-30T02:00:00"
+    }
+]

@@ -1,0 +1,202 @@
+[
+    {
+        "areaId": 1,
+        "areaName": "Area A",
+        "ownerId": 101,
+        "status": true,
+        "createdBy": 1,
+        "createdOn": "2024-07-29T10:00:00",
+        "modifiedBy": null,
+        "modifiedOn": null
+    },
+    {
+        "areaId": 2,
+        "areaName": "Area B",
+        "ownerId": 102,
+        "status": false,
+        "createdBy": 2,
+        "createdOn": "2024-07-28T15:00:00",
+        "modifiedBy": 3,
+        "modifiedOn": "2024-07-29T12:00:00"
+    },
+    {
+        "areaId": 3,
+        "areaName": "Area C",
+        "ownerId": 103,
+        "status": true,
+        "createdBy": 1,
+        "createdOn": "2024-07-28T16:00:00",
+        "modifiedBy": 2,
+        "modifiedOn": "2024-07-29T13:00:00"
+    },
+    {
+        "areaId": 4,
+        "areaName": "Area D",
+        "ownerId": 104,
+        "status": true,
+        "createdBy": 2,
+        "createdOn": "2024-07-28T17:00:00",
+        "modifiedBy": null,
+        "modifiedOn": null
+    },
+    {
+        "areaId": 5,
+        "areaName": "Area E",
+        "ownerId": 105,
+        "status": false,
+        "createdBy": 1,
+        "createdOn": "2024-07-28T18:00:00",
+        "modifiedBy": 3,
+        "modifiedOn": "2024-07-29T14:00:00"
+    },
+    {
+        "areaId": 6,
+        "areaName": "Area F",
+        "ownerId": 106,
+        "status": true,
+        "createdBy": 2,
+        "createdOn": "2024-07-28T19:00:00",
+        "modifiedBy": 4,
+        "modifiedOn": "2024-07-29T15:00:00"
+    },
+    {
+        "areaId": 7,
+        "areaName": "Area G",
+        "ownerId": 107,
+        "status": true,
+        "createdBy": 3,
+        "createdOn": "2024-07-28T20:00:00",
+        "modifiedBy": null,
+        "modifiedOn": null
+    },
+    {
+        "areaId": 8,
+        "areaName": "Area H",
+        "ownerId": 108,
+        "status": false,
+        "createdBy": 1,
+        "createdOn": "2024-07-28T21:00:00",
+        "modifiedBy": 5,
+        "modifiedOn": "2024-07-29T16:00:00"
+    },
+    {
+        "areaId": 9,
+        "areaName": "Area I",
+        "ownerId": 109,
+        "status": true,
+        "createdBy": 2,
+        "createdOn": "2024-07-28T22:00:00",
+        "modifiedBy": 6,
+        "modifiedOn": "2024-07-29T17:00:00"
+    },
+    {
+        "areaId": 10,
+        "areaName": "Area J",
+        "ownerId": 110,
+        "status": true,
+        "createdBy": 3,
+        "createdOn": "2024-07-28T23:00:00",
+        "modifiedBy": null,
+        "modifiedOn": null
+    },
+    {
+        "areaId": 11,
+        "areaName": "Area K",
+        "ownerId": 111,
+        "status": true,
+        "createdBy": 1,
+        "createdOn": "2024-07-29T00:00:00",
+        "modifiedBy": 4,
+        "modifiedOn": "2024-07-29T18:00:00"
+    },
+    {
+        "areaId": 12,
+        "areaName": "Area L",
+        "ownerId": 112,
+        "status": false,
+        "createdBy": 2,
+        "createdOn": "2024-07-29T01:00:00",
+        "modifiedBy": 5,
+        "modifiedOn": "2024-07-29T19:00:00"
+    },
+    {
+        "areaId": 13,
+        "areaName": "Area M",
+        "ownerId": 113,
+        "status": true,
+        "createdBy": 3,
+        "createdOn": "2024-07-29T02:00:00",
+        "modifiedBy": 6,
+        "modifiedOn": "2024-07-29T20:00:00"
+    },
+    {
+        "areaId": 14,
+        "areaName": "Area N",
+        "ownerId": 114,
+        "status": true,
+        "createdBy": 1,
+        "createdOn": "2024-07-29T03:00:00",
+        "modifiedBy": null,
+        "modifiedOn": null
+    },
+    {
+        "areaId": 15,
+        "areaName": "Area O",
+        "ownerId": 115,
+        "status": false,
+        "createdBy": 2,
+        "createdOn": "2024-07-29T04:00:00",
+        "modifiedBy": 7,
+        "modifiedOn": "2024-07-29T21:00:00"
+    },
+    {
+        "areaId": 16,
+        "areaName": "Area P",
+        "ownerId": 116,
+        "status": true,
+        "createdBy": 3,
+        "createdOn": "2024-07-29T05:00:00",
+        "modifiedBy": 8,
+        "modifiedOn": "2024-07-29T22:00:00"
+    },
+    {
+        "areaId": 17,
+        "areaName": "Area Q",
+        "ownerId": 117,
+        "status": true,
+        "createdBy": 1,
+        "createdOn": "2024-07-29T06:00:00",
+        "modifiedBy": 9,
+        "modifiedOn": "2024-07-29T23:00:00"
+    },
+    {
+        "areaId": 18,
+        "areaName": "Area R",
+        "ownerId": 118,
+        "status": true,
+        "createdBy": 2,
+        "createdOn": "2024-07-29T07:00:00",
+        "modifiedBy": null,
+        "modifiedOn": null
+    },
+    {
+        "areaId": 19,
+        "areaName": "Area S",
+        "ownerId": 119,
+        "status": true,
+        "createdBy": 3,
+        "createdOn": "2024-07-29T08:00:00",
+        "modifiedBy": 7,
+        "modifiedOn": "2024-07-30T00:00:00"
+    },
+    {
+        "areaId": 20,
+        "areaName": "Area T",
+        "ownerId": 120,
+        "status": false,
+        "createdBy": 1,
+        "createdOn": "2024-07-29T09:00:00",
+        "modifiedBy": 8,
+        "modifiedOn": "2024-07-30T01:00:00"
+    }
+]
