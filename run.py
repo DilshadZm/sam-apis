@@ -35,6 +35,11 @@ def get_sites():
     sites = load_json('Site.json')
     return jsonify(sites)
 
+@app.route('/api/owners', methods=['GET'])
+def get_sites():
+    owners = load_json('Owner.json')
+    return jsonify(owners)
+
 @app.route('/api/locations', methods=['GET'])
 def get_locations():
     locations = load_json('Location.json')
